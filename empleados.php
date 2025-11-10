@@ -1,25 +1,21 @@
 <?php
 session_start();
 require_once("includes/db.php");
+
 requireLogin();
 
 $mensaje = '';
 $tipoMensaje = '';
 
-// Procesar formulario de registro
+// Procesar formulario
 if ($_SERVER["REQUEST_METHOD"] == "POST") {
-    $nombreempleado = sanitizeInput($conn, $_POST["nombreempleado"]);
-    $cargo = sanitizeInput($conn, $_POST["cargo"]);
+    $nombre = sanitizeInput($conn, $_POST["nombre"]);
+    $apellido = sanitizeInput($conn, $_POST["apellido"]);
     $correo = sanitizeInput($conn, $_POST["correo"]);
-    $telefono = sanitizeInput($conn, $_POST["telefono"]);
-    $fecha_contratacion = $_POST["fecha_contratacion"];
+    $rol = sanitizeInput($conn, $_POST["rol"]);
 
-    $sql = "INSERT INTO empleado (nombreempleado, cargo, correo, telefono, fecha_contratacion) 
-            VALUES (?, ?, ?, ?, ?)";
-    
-    $stmt = executeQuery($conn, $sql, "sssss", [
-        $nombreempleado, $cargo, $correo, $telefono, $fecha_contratacion
-    ]);
+    $sql = "INSERT INTO empleado (nombre, apellido, correo, rol) VALUES (?, ?, ?, ?)";
+    $stmt = executeQuery($conn, $sql, "ssss", [$nombre, $apellido, $correo, $rol]);
 
     if ($stmt) {
         $mensaje = "Empleado registrado exitosamente";
@@ -30,12 +26,7 @@ if ($_SERVER["REQUEST_METHOD"] == "POST") {
     }
 }
 
-// Obtener empleados
-$empleados = $conn->query("
-    SELECT * 
-    FROM empleado
-    ORDER BY created_at DESC
-");
+$empleados = $conn->query("SELECT * FROM empleado ORDER BY nombreempleado");
 ?>
 <!DOCTYPE html>
 <html lang="es">
@@ -89,31 +80,30 @@ $empleados = $conn->query("
             <form method="post">
                 <div class="form-row">
                     <div class="form-group">
-                        <label for="nombreempleado">Nombre Completo *</label>
-                        <input type="text" id="nombreempleado" name="nombreempleado" placeholder="Ej: María López" required>
+                        <label for="nombre">Nombre *</label>
+                        <input type="text" id="nombre" name="nombre" placeholder="Ej: Juan" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="cargo">Cargo *</label>
-                        <input type="text" id="cargo" name="cargo" placeholder="Ej: Enfermera, Doctor" required>
-                    </div>
-                </div>
-
-                <div class="form-row">
-                    <div class="form-group">
-                        <label for="correo">Correo Electrónico</label>
-                        <input type="email" id="correo" name="correo" placeholder="correo@ejemplo.com">
+                        <label for="apellido">Apellido *</label>
+                        <input type="text" id="apellido" name="apellido" placeholder="Ej: Pérez" required>
                     </div>
 
                     <div class="form-group">
-                        <label for="telefono">Teléfono</label>
-                        <input type="tel" id="telefono" name="telefono" placeholder="0000-0000">
+                        <label for="correo">Correo *</label>
+                        <input type="email" id="correo" name="correo" placeholder="ejemplo@correo.com" required>
                     </div>
-                </div>
 
-                <div class="form-group">
-                    <label for="fecha_contratacion">Fecha de Contratación</label>
-                    <input type="date" id="fecha_contratacion" name="fecha_contratacion">
+                    <div class="form-group">
+                        <label for="rol">Rol *</label>
+                        <select id="rol" name="rol" required>
+                            <option value="">Seleccione...</option>
+                            <option value="1">Administrador</option>
+                            <option value="2">Médico</option>
+                            <option value="3">Enfermero</option>
+                            <option value="4">Recepción</option>
+                        </select>
+                    </div>
                 </div>
 
                 <div class="btn-group">
@@ -133,13 +123,11 @@ $empleados = $conn->query("
                 <table>
                     <thead>
                         <tr>
-                            <th>Código</th>
+                            <th>ID</th>
                             <th>Nombre</th>
-                            <th>Cargo</th>
                             <th>Correo</th>
-                            <th>Teléfono</th>
-                            <th>Fecha Contratación</th>
-                            <th>Acciones</th>
+                            <th>Rol</th>
+                            <th>Fecha Registro</th>
                         </tr>
                     </thead>
                     <tbody>
@@ -148,21 +136,14 @@ $empleados = $conn->query("
                                 <tr>
                                     <td><?= htmlspecialchars($e['codigoempleado']) ?></td>
                                     <td><strong><?= htmlspecialchars($e['nombreempleado']) ?></strong></td>
+                                    <td><?= htmlspecialchars($e['correoempleado']) ?></td>
                                     <td><?= htmlspecialchars($e['rol']) ?></td>
-                                    <td><?= htmlspecialchars($e['correo'] ?? 'N/A') ?></td>
-                                    <td><?= htmlspecialchars($e['telefono'] ?? 'N/A') ?></td>
-                                    <td><?= htmlspecialchars($e['fecha_contratacion'] ?? 'N/A') ?></td>
-                                    <td>
-                                        <div class="btn-group">
-                                            <button class="btn btn-info" onclick="verDetalle(<?= $e['codigoempleado'] ?>)">👁️</button>
-                                            <button class="btn btn-danger" onclick="eliminarEmpleado(<?= $e['codigoempleado'] ?>)">🗑️</button>
-                                        </div>
-                                    </td>
+                                    <td><?= formatDate($e['created_at']) ?></td>
                                 </tr>
                             <?php endwhile; ?>
                         <?php else: ?>
                             <tr>
-                                <td colspan="7" style="text-align: center; color: var(--text-light); padding: 2rem;">
+                                <td colspan="6" style="text-align: center; color: var(--text-light); padding: 2rem;">
                                     No hay empleados registrados
                                 </td>
                             </tr>
@@ -172,18 +153,5 @@ $empleados = $conn->query("
             </div>
         </div>
     </div>
-
-    <script>
-        function verDetalle(id) {
-            alert('Funcionalidad de detalle - ID: ' + id);
-        }
-
-        function eliminarEmpleado(id) {
-            if (confirm('¿Seguro que deseas eliminar este empleado?')) {
-                // Aquí podrías agregar una llamada fetch() o redirección para eliminar
-                alert('Eliminar empleado ID: ' + id + ' (pendiente implementar)');
-            }
-        }
-    </script>
 </body>
 </html>
