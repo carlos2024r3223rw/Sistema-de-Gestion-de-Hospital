@@ -1,35 +1,59 @@
- MediFlow - Sistema de Gestión Hospitalaria
-MediFlow es una plataforma integral y moderna para la administración de centros médicos, clínicas y hospitales. Diseñada con un enfoque en la eficiencia del personal médico y la claridad administrativa, ofrece una experiencia de usuario "Premium" con una interfaz limpia, rápida y profesional.
+# MediFlow — Hospital Management System
 
- Características Principales
- Para el Personal Médico
-Atención Unificada: Flujo de consulta integral donde se registra diagnóstico, recetas, exámenes de laboratorio y citas de seguimiento en una sola pantalla.
-Expediente Clínico Digital: Historial médico visual en línea de tiempo (Timeline) que consolida consultas, hospitalizaciones, recetas y resultados de laboratorio.
-Gestión de Patologías: Catálogo detallado de enfermedades con niveles de gravedad y tratamientos sugeridos.
- Para Administración y Recepción
-Módulo de Facturación: Control de cobros pendientes y pagos procesados (Efectivo, Tarjeta, Transferencia).
-Control de Inventario (Farmacia): Gestión de stock de medicamentos con alertas automáticas de existencias bajas.
-Seguridad por Roles: Accesos restringidos según el cargo (Admin, Doctor, Enfermería, Recepción).
- Análisis y Reportes
-Dashboard interactivo con métricas clave en tiempo real.
-Reportes de ocupación hospitalaria y patologías más frecuentes.
-Interfaz optimizada para impresión de recetas y comprobantes.
- Stack Tecnológico
-Backend: PHP 8.x Nativo (Arquitectura Modular).
-Base de Datos: MySQL / MariaDB (Motor InnoDB).
-Frontend: HTML5, Vanilla CSS3 (Variables CSS), JavaScript Moderno.
-Iconografía: Lucide Icons.
-Tipografía: Inter (Google Fonts).
- Instalación
-Clonar el repositorio en tu servidor local (ej. Laragon o XAMPP).
-Importar la base de datos utilizando el archivo base de datos utilizada.sql.
-Configurar las credenciales en includes/db.php.
-Acceder mediante el navegador y usar las credenciales de prueba.
- Usuarios de Prueba (Roles)
-Admin: Gestión total de empleados, precios y configuración.
-Doctor / Enfermería: Acceso a gestión médica y expedientes.
-Recepción: Enfoque exclusivo en facturación y cobros.
-🎨 Diseño y UX
-El sistema utiliza una paleta de colores Slate & Sky Blue, diseñada para transmitir confianza y profesionalismo médico, con micro-interacciones que mejoran la fluidez de navegación.
+**A unified workspace for patient records, clinical workflows, and hospital operations.**
 
-Desarrollado con ❤️ para la gestión de salud moderna
+MediFlow is a portfolio project that brings common clinic and hospital workflows into one web application. Medical staff can review patient history and record visits, while administrators can manage appointments, admissions, billing, pharmacy inventory, and operational reports.
+
+> **Portfolio demonstration only:** MediFlow is not a certified clinical system. Do not use it for real patient data, diagnosis, treatment, billing, or hospital operations.
+
+## Product capabilities
+
+### Clinical workflows
+
+- Patient records with contact details, medical history, allergies, and emergency contacts.
+- A timeline that brings visits, hospitalizations, prescriptions, and laboratory results together.
+- Visit records for symptoms, diagnoses, prescriptions, examinations, and follow-up appointments.
+- Hospital admission records with room, status, diagnosis, treatment, and notes.
+- A pathology catalog with categories, severity levels, and suggested treatments.
+
+### Administration and operations
+
+- Billing records for services and medicines, with payment status and method.
+- Pharmacy inventory with stock levels and low-stock monitoring.
+- Role-based access for administrators, doctors, nursing staff, and reception.
+- Dashboard metrics, hospital occupancy reports, and frequent-pathology summaries.
+- Print-friendly prescriptions and payment receipts.
+
+## Technology
+
+| Area | Technology |
+| --- | --- |
+| Backend | PHP 8, modular native PHP |
+| Database | MySQL or MariaDB with InnoDB |
+| Frontend | HTML5, CSS3, modern JavaScript |
+| Icons and typography | Lucide Icons, Inter |
+
+## Run locally
+
+### Requirements
+
+- PHP 8 or later.
+- MySQL or MariaDB.
+- A local server such as Laragon or XAMPP.
+
+### Setup
+
+1. Clone the repository into your local server's document root.
+2. Start the web server and MySQL/MariaDB.
+3. Import `base de datos utilizada.sql` using phpMyAdmin or another database client. The SQL file creates and selects the `hospital` database.
+4. Configure the database connection in `includes/db.php`. Use local credentials and do not commit them.
+5. Open the application through your local server in a browser.
+6. Use the seeded demo accounts for a local walkthrough. Change or remove sample passwords before sharing a deployment.
+
+## Project scope and data safety
+
+The seed data is for demonstration and development. Do not enter real patient information or expose the app or database publicly. A real healthcare deployment would require a separate security, privacy, clinical, and regulatory review, including access controls, auditability, backups, and operational safeguards.
+
+## License
+
+No license terms are specified in this repository. Contact the author before reusing or distributing the project.
